@@ -36,7 +36,7 @@ public class HuffmanKodierung {
 
             // Huffman Kodierung
             Node top = null;
-            for(int i = 0; i < nodeList.size(); i = i + 2) {
+            for(int i = 0; i < nodeList.size() - 1; i = i + 2) {
 
                 // Die zwei Knoten (englisch: Node) mit der tiefsten Frequency auslesen
                 Node first = nodeList.get(i);
@@ -68,6 +68,8 @@ public class HuffmanKodierung {
                 // Char dieses Nodes abrufen und speichern
 
             }
+            System.out.println();
+            nodeList.forEach(node -> System.out.print(node.getC() + " " + node.getFrequency() + "   "));
         } catch (IOException e) {
             System.out.println("Error while reading from file dec_tab-mada.txt");
         }
