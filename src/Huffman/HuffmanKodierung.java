@@ -21,22 +21,29 @@ public class HuffmanKodierung {
             BufferedReader bufferedReader = new BufferedReader(inputReader);
 
             // Count Chars in File
-            Map<Character, Integer> charCount = getCharAmount(bufferedReader);
+            Map<Character, Integer> charFrequency = getCharFrequency(bufferedReader);
             System.out.println("Number of Chars in File");
-            System.out.println(charCount);
+            System.out.println(charFrequency);
 
-            // Calculate probability for each char
-            Map<Character, Double> charProbability = getCharProbability(charCount);
-            System.out.println("Percentage Value of each char");
-            System.out.println(charProbability);
+            // Add Node for every char to list and sort List by lowest frequency
+            List<Node> nodeList = new ArrayList<>();
+            for(Map.Entry<Character,Integer> e : charFrequency.entrySet()) {
+                nodeList.add(new Node(e.getValue(), e.getKey()));
+            }
+            nodeList.sort(Node::compareTo);
+            nodeList.forEach(node -> System.out.println(node.getFrequency()));
+
+            //
+
+
 
         } catch (IOException e) {
             System.out.println("Error while reading from file dec_tab-mada.txt");
         }
     }
 
-    private static Map<Character, Integer> getCharAmount(BufferedReader bufferedReader) throws IOException {
-        Map<Character, Integer> charCount = new HashMap<>();
+    private static Map<Character, Integer> getCharFrequency(BufferedReader bufferedReader) throws IOException {
+        Map<Character, Integer> charCount = new TreeMap<>();
         String line = bufferedReader.readLine();
 
         while (line != null) {
@@ -52,24 +59,4 @@ public class HuffmanKodierung {
         }
         return charCount;
     }
-
-    private static Map<Character, Double> getCharProbability(Map<Character, Integer> charCount) {
-        Map<Character, Double> charProbability = new HashMap<>();
-        int totalCharAmount = 0;
-
-        // Get total Amount of chars
-        for(Character c : charCount.keySet()) {
-            totalCharAmount = totalCharAmount + charCount.get(c);
-        }
-
-        // Calculate Probability
-        for(Character c : charCount.keySet()) {
-            double percentageValueSingleChar =  100.00 / totalCharAmount;
-            double percentageValueCurrentChar = charCount.get(c) * percentageValueSingleChar;
-            charProbability.put(c, percentageValueCurrentChar);
-        }
-
-        return charProbability;
-    }
-
 }
