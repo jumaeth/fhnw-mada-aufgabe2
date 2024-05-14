@@ -25,7 +25,7 @@ public class HuffmanKodierung {
             System.out.println("Number of Chars in File");
             System.out.println(charCount);
 
-            // Create probability table
+            // Calculate probability for each char
             Map<Character, Double> charProbability = getCharProbability(charCount);
             System.out.println("Percentage Value of each char");
             System.out.println(charProbability);
