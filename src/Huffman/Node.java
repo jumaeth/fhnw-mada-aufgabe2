@@ -3,8 +3,8 @@ package src.Huffman;
 public class Node implements Comparable<Node> {
     private int frequency;
     private char c;
-    private Node left = null;
-    private Node right = null;
+    private Node leftNode = null;
+    private Node rightNode = null;
 
     public Node(int frequency, char c) {
         this.frequency = frequency;
@@ -19,12 +19,20 @@ public class Node implements Comparable<Node> {
         return frequency;
     }
 
-    public Node getLeft() {
-        return left;
+    public Node getLeftNode() {
+        return leftNode;
     }
 
-    public Node getRight() {
-        return right;
+    public Node getRightNode() {
+        return rightNode;
+    }
+
+    public void setLeftNode(Node n) {
+        this.leftNode = n;
+    }
+
+    public void setRightNode(Node n) {
+        this.rightNode = n;
     }
 
     @Override

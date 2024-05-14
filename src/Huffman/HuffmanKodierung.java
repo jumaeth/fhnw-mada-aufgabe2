@@ -31,12 +31,43 @@ public class HuffmanKodierung {
                 nodeList.add(new Node(e.getValue(), e.getKey()));
             }
             nodeList.sort(Node::compareTo);
-            nodeList.forEach(node -> System.out.println(node.getFrequency()));
+            System.out.println("Char List sorted by frequency");
+            nodeList.forEach(node -> System.out.print(node.getFrequency() + " "));
 
-            //
+            // Huffman Kodierung
+            Node top = null;
+            for(int i = 0; i < nodeList.size(); i = i + 2) {
 
+                // Die zwei Knoten (englisch: Node) mit der tiefsten Frequency auslesen
+                Node first = nodeList.get(i);
+                Node second = nodeList.get(i + 1);
 
+                // Die zwei Knoten zu einem neuen Knoten verschmelzen und Frequency berechenen
+                // Das '!' bezeichnet leer, weil nur in den Blätter Values enthalten sind
+                Node merged = new Node(first.getFrequency() + second.getFrequency(), '!');
 
+                // Die beiden Blätter des neuen Knoten speichern
+                merged.setLeftNode(first);
+                merged.setRightNode(second);
+
+                // Oberster Knoten markieren
+                top = merged;
+
+                // Verschmolzener Knoten der Liste hinzufügen
+                nodeList.add(merged);
+
+                // Liste neu sortieren
+                nodeList.sort(Node::compareTo);
+
+                // TODO
+                // Kodierungstabelle generieren, grobes Vorgehen:
+                // Bei top Node starten
+                // Falls Input 0: linker Node abrufen
+                // Falls Input 1: rechter Node abrufen
+                // Solange bis beide Nodes links und rechts Null sind (also keine mehr übrig, dann sind wir am Blatt angelangt)
+                // Char dieses Nodes abrufen und speichern
+
+            }
         } catch (IOException e) {
             System.out.println("Error while reading from file dec_tab-mada.txt");
         }
