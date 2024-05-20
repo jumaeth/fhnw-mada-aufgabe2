@@ -1,9 +1,6 @@
 package src.Huffman;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -16,13 +13,13 @@ public class HuffmanKodierung {
 
         try (InputStream inEncode = Files.newInputStream(fileToEncode)) {
 
-            // Read File which needs to be encoded
+            // Read File
             InputStreamReader inputReader = new InputStreamReader(inEncode);
             BufferedReader bufferedReader = new BufferedReader(inputReader);
 
             // Count Chars in File
             Map<Character, Integer> charFrequency = getCharFrequency(bufferedReader);
-            System.out.println("Number of Chars in File");
+            System.out.println("\nNumber of Chars in File");
             System.out.println(charFrequency);
 
             // Add Node for every char to list and sort List by lowest frequency
@@ -31,10 +28,10 @@ public class HuffmanKodierung {
                 nodeList.add(new Node(e.getValue(), e.getKey()));
             }
             nodeList.sort(Node::compareTo);
-            System.out.println("Char List sorted by frequency");
+            System.out.println("\nChar List sorted by frequency");
             nodeList.forEach(node -> System.out.print(node.getFrequency() + " "));
 
-            // Huffman Kodierung
+            // Generate Huffman Tree
             Node top = null;
             for(int i = 0; i < nodeList.size() - 1; i = i + 2) {
 
@@ -58,21 +55,49 @@ public class HuffmanKodierung {
 
                 // Liste neu sortieren
                 nodeList.sort(Node::compareTo);
-
-                // TODO
-                // Kodierungstabelle generieren, grobes Vorgehen:
-                // Bei top Node starten
-                // Falls Input 0: linker Node abrufen
-                // Falls Input 1: rechter Node abrufen
-                // Solange bis beide Nodes links und rechts Null sind (also keine mehr übrig, dann sind wir am Blatt angelangt)
-                // Char dieses Nodes abrufen und speichern
-
             }
+
+            // Generate Huffman Table
+            HashMap<Character,String> huffmanTable = new HashMap<>();
+            generateHuffmanTable(top, "", huffmanTable);
+            System.out.println("\n\nHuffman Table");
+            System.out.println(huffmanTable);
+
+            // Write Huffman Table to file
+            writeHuffmanTable(huffmanTable);
+
+
+
             System.out.println();
-            nodeList.forEach(node -> System.out.print(node.getC() + " " + node.getFrequency() + "   "));
+            nodeList.forEach(node -> System.out.print(node.getChar() + " " + node.getFrequency() + "   "));
         } catch (IOException e) {
             System.out.println("Error while reading from file dec_tab-mada.txt");
         }
+    }
+
+    private static void writeHuffmanTable(HashMap<Character, String> huffmanTable) {
+        Path huffmanTableFile = Path.of("src/Huffman/dec_tab.txt");
+        try(OutputStream out = Files.newOutputStream(huffmanTableFile)) {
+            OutputStreamWriter writer = new OutputStreamWriter(out);
+            BufferedWriter buffered = new BufferedWriter(writer);
+            for(Map.Entry<Character,String> e : huffmanTable.entrySet()) {
+                buffered.write(e.getKey() + ":" + e.getValue() + "-");
+            }
+        } catch (IOException e) {
+            System.out.println("Error while writing Huffman Table to file");
+        }
+        System.out.println();
+    }
+
+    private static void generateHuffmanTable(Node top, String code, HashMap<Character, String> huffmanTable) {
+        // Blatt wurde erreicht
+        if(top.getRightNode() == null && top.getLeftNode() == null) {
+            huffmanTable.put(top.getChar(), code);
+            return;
+        }
+        // Blatt wurde noch nicht erreicht
+        generateHuffmanTable(top.getLeftNode(), code + "0", huffmanTable);
+        generateHuffmanTable(top.getRightNode(), code + "1", huffmanTable);
     }
 
     private static Map<Character, Integer> getCharFrequency(BufferedReader bufferedReader) throws IOException {

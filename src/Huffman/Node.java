@@ -11,7 +11,7 @@ public class Node implements Comparable<Node> {
         this.c = c;
     }
 
-    public char getC() {
+    public char getChar() {
         return c;
     }
 
