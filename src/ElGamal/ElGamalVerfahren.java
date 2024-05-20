@@ -1,6 +1,6 @@
-package src.Huffman;
+package src;
 
-public class HuffmanKodierung {
+public class ElGamalVerfahren {
 
 
 public static void main(String[] args) {
