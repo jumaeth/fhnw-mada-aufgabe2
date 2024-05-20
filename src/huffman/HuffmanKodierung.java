@@ -66,13 +66,36 @@ public class HuffmanKodierung {
             // Write Huffman Table to file
             writeHuffmanTable(huffmanTable);
 
+            // Generate Bitstring
+            String bitString = generateBitstring(huffmanTable, fileToEncode);
+            System.out.println("Bitstring: ");
+            System.out.println(bitString);
 
-
-            System.out.println();
-            nodeList.forEach(node -> System.out.print(node.getChar() + " " + node.getFrequency() + "   "));
         } catch (IOException e) {
             System.out.println("Error while reading from file dec_tab-mada.txt");
         }
+    }
+
+    private static String generateBitstring(HashMap<Character, String> huffmanTable, Path path) {
+        try (InputStream in = Files.newInputStream(path)) {
+            String bitString = "";
+
+            InputStreamReader reader = new InputStreamReader(in);
+            BufferedReader buffered = new BufferedReader(reader);
+
+            String line = buffered.readLine();
+            while (line != null) {
+                for(int i = 0; i < line.length(); i++) {
+                    char c = line.charAt(i);
+                    bitString = bitString + huffmanTable.get(c);
+                }
+                line = buffered.readLine();
+            }
+            return bitString;
+        } catch (IOException e) {
+            System.out.println("Error while writing Bitstring");
+        }
+        return null;
     }
 
     private static void writeHuffmanTable(HashMap<Character, String> huffmanTable) {
