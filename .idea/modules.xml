@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
+      <module fileurl="file://$PROJECT_DIR$/mada-programmieraufgabe2.iml" filepath="$PROJECT_DIR$/mada-programmieraufgabe2.iml" />
+=======
       <module fileurl="file://$PROJECT_DIR$/.idea/mada-programmieraufgabe2.iml" filepath="$PROJECT_DIR$/.idea/mada-programmieraufgabe2.iml" />
+>>>>>>> origin/main
     </modules>
   </component>
 </project>
