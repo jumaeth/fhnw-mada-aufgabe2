@@ -1,6 +1,7 @@
 package huffman;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -71,9 +72,61 @@ public class HuffmanKodierung {
             System.out.println("Bitstring: ");
             System.out.println(bitString);
 
+            // Generate byteArray from Bitstring
+            byte[] byteArray = bitStringToByteArr(bitString);
+            System.out.println(Arrays.toString(byteArray));
+
+            // Write byteArray to File
+            FileOutputStream fos = new FileOutputStream("src/huffman/output.dat");
+            fos.write(byteArray);
+            fos.close();
+
+            // Read File
+            File file = new File("src/huffman/output.dat");
+            byte[] bFile = new byte[(int) file.length()];
+            FileInputStream fis = new FileInputStream(file);
+            fis.read(bFile);
+            String binary = byteArrToBitString(bFile);
+            System.out.println(binary);
+            fis.close();
+
+            // Cut off last 1000...
+            int index = binary.length() - 1;
+            while(binary.charAt(index) == '1') {
+                index = index - 1;
+            }
+            binary = binary.substring(0,index - 1);
+            System.out.println(binary);
+
+
+
+
         } catch (IOException e) {
             System.out.println("Error while reading from file dec_tab-mada.txt");
         }
+    }
+
+    public static String byteArrToBitString(byte[] bytes) {
+        StringBuilder bitString = new StringBuilder();
+        for (byte b : bytes) {
+            String binaryString = Integer.toBinaryString(b & 0xFF);
+            while (binaryString.length() < 8) { // pad with leading zeros
+                binaryString = "0" + binaryString;
+            }
+            bitString.append(binaryString);
+        }
+        return bitString.toString();
+    }
+
+    public static byte[] bitStringToByteArr(String bitString) {
+        int byteLength = bitString.length() / 8;
+        byte[] bytes = new byte[byteLength];
+        for (int i = 0; i < byteLength; i++) {
+            String byteString = bitString.substring(8 * i, 8 * i + 8);
+            int byteValue = Integer.parseInt(byteString, 2);
+            bytes[i] = (byte) byteValue;
+        }
+        return bytes;
     }
 
     private static String generateBitstring(HashMap<Character, String> huffmanTable, Path path) {
