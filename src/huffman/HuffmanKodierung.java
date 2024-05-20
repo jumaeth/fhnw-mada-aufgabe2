@@ -76,13 +76,14 @@ public class HuffmanKodierung {
     }
 
     private static void writeHuffmanTable(HashMap<Character, String> huffmanTable) {
-        Path huffmanTableFile = Path.of("src/Huffman/dec_tab.txt");
+        Path huffmanTableFile = Path.of("src/huffman/dec_tab.txt");
         try(OutputStream out = Files.newOutputStream(huffmanTableFile)) {
             OutputStreamWriter writer = new OutputStreamWriter(out);
             BufferedWriter buffered = new BufferedWriter(writer);
             for(Map.Entry<Character,String> e : huffmanTable.entrySet()) {
                 buffered.write(e.getKey() + ":" + e.getValue() + "-");
             }
+            buffered.close();
         } catch (IOException e) {
             System.out.println("Error while writing Huffman Table to file");
         }
