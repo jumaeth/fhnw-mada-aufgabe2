@@ -1,7 +1,6 @@
 package huffman;
 
 import java.io.*;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -61,7 +60,7 @@ public class HuffmanKodierung {
             // Generate Huffman Table
             HashMap<Character,String> huffmanTable = new HashMap<>();
             generateHuffmanTable(top, "", huffmanTable);
-            System.out.println("\n\nHuffman Table");
+            System.out.println("\n\n Selbst Generierter Huffman Table");
             System.out.println(huffmanTable);
 
             // Write Huffman Table to file
@@ -90,7 +89,7 @@ public class HuffmanKodierung {
             System.out.println(binary);
             fis.close();
 
-            // Cut off last 1000...
+            // Cut off last ...1000
             int index = binary.length() - 1;
             while(binary.charAt(index) == '1') {
                 index = index - 1;
@@ -98,11 +97,43 @@ public class HuffmanKodierung {
             binary = binary.substring(0,index - 1);
             System.out.println(binary);
 
-
+            // Decode Binary String
+            decodeBitstring(binary);
 
 
         } catch (IOException e) {
-            System.out.println("Error while reading from file dec_tab-mada.txt");
+            System.out.println("Error while reading from file output.dat");
+        }
+    }
+
+    private static void decodeBitstring(String binary) {
+        Path toDecode = Path.of("src/huffman/dec_tab-mada.txt");
+        try(InputStream in = Files.newInputStream(toDecode)) {
+            //Read File with Huffman Table in it
+            InputStreamReader reader = new InputStreamReader(in);
+            BufferedReader buffered = new BufferedReader(reader);
+
+            Map<String, Character> huffmanTable = new HashMap<>();
+
+            //Read every line of File and save the chars with their binary code to map
+            String huffmanTableAsString = buffered.readLine();
+            while(huffmanTableAsString != null) {
+                String[] huffmanTableElements = huffmanTableAsString.split("-");
+                for(String s : huffmanTableElements) {
+                    String[] huffmanTableAtoms = s.split(":");
+                    huffmanTable.put(huffmanTableAtoms[1], (char) Integer.parseInt(huffmanTableAtoms[0]));
+                }
+                huffmanTableAsString = buffered.readLine();
+            }
+            System.out.println("\nEingelesener Huffman Table");
+            System.out.println(huffmanTable);
+
+            //TODO
+            //Read File output-mada.dat and decode with huffmanTable
+
+
+        } catch (IOException e) {
+            System.out.println("Error while reading from dec_tab-mada.txt");
         }
     }
 
@@ -151,7 +182,6 @@ public class HuffmanKodierung {
             while(bitString.length() % 8 != 0) {
                 bitString = bitString + "0";
             }
-
             return bitString;
         } catch (IOException e) {
             System.out.println("Error while writing Bitstring");
