@@ -83,6 +83,7 @@ public class HuffmanKodierung {
             InputStreamReader reader = new InputStreamReader(in);
             BufferedReader buffered = new BufferedReader(reader);
 
+            // Add Values from Huffman Table to one Bitstring
             String line = buffered.readLine();
             while (line != null) {
                 for(int i = 0; i < line.length(); i++) {
@@ -91,6 +92,13 @@ public class HuffmanKodierung {
                 }
                 line = buffered.readLine();
             }
+
+            // Add one 1. Then add 0 until bitString length can be divided by 8
+            bitString = bitString + "1";
+            while(bitString.length() % 8 != 0) {
+                bitString = bitString + "0";
+            }
+
             return bitString;
         } catch (IOException e) {
             System.out.println("Error while writing Bitstring");
