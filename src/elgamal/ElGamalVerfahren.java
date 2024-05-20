@@ -1,28 +1,12 @@
 package ElGamal;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Random;
 
 public class ElGamalVerfahren {
-
-    //neutrales Element
-
-    int neutral = 1;
-
-    //ermitteln von ord(2)
-
-    /*
-        2^0 = 1
-        2^1 = 2*2 mod n = 4
-        8
-        16
-        32
-
-
-     */
-
 
     // Key Genetor Methode
     public static void createKey(BigInteger n) throws IOException {
@@ -30,6 +14,7 @@ public class ElGamalVerfahren {
         // Erstellung des Erzeugers 2
         BigInteger g = BigInteger.valueOf(2);
 
+        // Generierung einer random Zahl für den private Key Konstruktor
         Random random = new Random();
 
         // Generierung eines "b" zwischen 0 bis n - 1
@@ -38,15 +23,27 @@ public class ElGamalVerfahren {
         // Vom privaten Schlüssel abgeleitet "g^b"
         BigInteger publicKey = g.modPow(privateKey, n);
 
-        System.out.println(publicKey);
-        System.out.println(privateKey);
+        // Schreiben des private Keys in die pk.txt Datei
+        Path pk = Path.of("src/ElGamal/pk.txt");
+        try(OutputStream out = Files.newOutputStream(pk)) {
+            OutputStreamWriter writer = new OutputStreamWriter(out);
+            BufferedWriter buffered = new BufferedWriter(writer);
+            buffered.write(privateKey.toString());
+            buffered.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
 
-
-        FileWriter pkWriter = new FileWriter("src/ElGamal/pk.txt");
-        FileWriter skWriter = new FileWriter("src/ElGamal/sk.txt");
-        pkWriter.write(String.valueOf(publicKey));
-        skWriter.write(String.valueOf(privateKey));
-
+        // Schreiben des public Keys in die sk.txt Datei
+        Path sk = Path.of("src/ElGamal/sk.txt");
+        try(OutputStream out = Files.newOutputStream(sk)) {
+            OutputStreamWriter writer = new OutputStreamWriter(out);
+            BufferedWriter buffered = new BufferedWriter(writer);
+            buffered.write(publicKey.toString());
+            buffered.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public static void main(String[] args) {
