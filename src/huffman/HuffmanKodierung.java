@@ -6,12 +6,18 @@ import java.nio.file.Path;
 import java.util.*;
 
 public class HuffmanKodierung {
+
+    // Path to Huffman Table
+    private static final Path HUFFMAN_TABLE_PATH = Path.of("src/huffman/dec_tab.txt");
+
+    // File which needs to be encoded
+    private static final Path FILE_TO_ENCODE = Path.of("src/Huffman/toEncode.txt");
+
+    // Output File for Byte Array
+    private static final Path OUTPUT_FILE = Path.of("src/huffman/output.dat");
+
     public static void main(String[] args) {
-
-        // File which needs to be encoded
-        Path fileToEncode = Path.of("src/Huffman/toEncode.txt");
-
-        try (InputStream inEncode = Files.newInputStream(fileToEncode)) {
+        try (InputStream inEncode = Files.newInputStream(FILE_TO_ENCODE)) {
 
             // Read File
             InputStreamReader inputReader = new InputStreamReader(inEncode);
@@ -67,7 +73,7 @@ public class HuffmanKodierung {
             writeHuffmanTable(huffmanTable);
 
             // Generate Bitstring
-            String bitString = generateBitstring(huffmanTable, fileToEncode);
+            String bitString = generateBitstring(huffmanTable, FILE_TO_ENCODE);
             System.out.println("Bitstring: ");
             System.out.println(bitString);
 
@@ -76,12 +82,12 @@ public class HuffmanKodierung {
             System.out.println(Arrays.toString(byteArray));
 
             // Write byteArray to File
-            FileOutputStream fos = new FileOutputStream("src/huffman/output.dat");
+            FileOutputStream fos = new FileOutputStream(OUTPUT_FILE.toString());
             fos.write(byteArray);
             fos.close();
 
             // Read File
-            File file = new File("src/huffman/output.dat");
+            File file = new File(OUTPUT_FILE.toString());
             byte[] bFile = new byte[(int) file.length()];
             FileInputStream fis = new FileInputStream(file);
             fis.read(bFile);
@@ -98,7 +104,8 @@ public class HuffmanKodierung {
             System.out.println(binary);
 
             // Decode Binary String
-            decodeBitstring(binary);
+            String decodedMessage = decodeBitstring(binary);
+            System.out.println(decodedMessage);
 
 
         } catch (IOException e) {
@@ -106,14 +113,32 @@ public class HuffmanKodierung {
         }
     }
 
-    private static void decodeBitstring(String binary) {
-        Path toDecode = Path.of("src/huffman/dec_tab-mada.txt");
-        try(InputStream in = Files.newInputStream(toDecode)) {
+    // Decode Bitstring with huffmanTable
+    private static String decodeBitstring(String binary) {
+        Map<String, Character> huffmanTable = readHuffmanTable();
+
+        StringBuilder result = new StringBuilder();
+        StringBuilder currentBitString = new StringBuilder();
+
+        for (char bit : binary.toCharArray()) {
+            currentBitString.append(bit);
+            if (huffmanTable.containsKey(currentBitString.toString())) {
+                result.append(huffmanTable.get(currentBitString.toString()));
+                currentBitString.setLength(0); // clear currentBitString
+            }
+        }
+
+        return result.toString();
+    }
+
+    // Reads Huffman Table from File
+    private static Map<String, Character> readHuffmanTable() {
+        Map<String, Character> huffmanTable = new HashMap<>();
+        try(InputStream in = Files.newInputStream(HUFFMAN_TABLE_PATH)) {
             //Read File with Huffman Table in it
             InputStreamReader reader = new InputStreamReader(in);
             BufferedReader buffered = new BufferedReader(reader);
 
-            Map<String, Character> huffmanTable = new HashMap<>();
 
             //Read every line of File and save the chars with their binary code to map
             String huffmanTableAsString = buffered.readLine();
@@ -127,16 +152,13 @@ public class HuffmanKodierung {
             }
             System.out.println("\nEingelesener Huffman Table");
             System.out.println(huffmanTable);
-
-            //TODO
-            //Read File output-mada.dat and decode with huffmanTable
-
-
         } catch (IOException e) {
             System.out.println("Error while reading from dec_tab-mada.txt");
         }
+        return huffmanTable;
     }
 
+    // Convert Byte Array to Bitstring
     public static String byteArrToBitString(byte[] bytes) {
         StringBuilder bitString = new StringBuilder();
         for (byte b : bytes) {
@@ -149,6 +171,7 @@ public class HuffmanKodierung {
         return bitString.toString();
     }
 
+    // Convert Bitstring to Byte Array
     public static byte[] bitStringToByteArr(String bitString) {
         int byteLength = bitString.length() / 8;
         byte[] bytes = new byte[byteLength];
@@ -160,6 +183,7 @@ public class HuffmanKodierung {
         return bytes;
     }
 
+    // Generate Bitstring from File with Huffman Table
     private static String generateBitstring(HashMap<Character, String> huffmanTable, Path path) {
         try (InputStream in = Files.newInputStream(path)) {
             String bitString = "";
@@ -190,12 +214,11 @@ public class HuffmanKodierung {
     }
 
     private static void writeHuffmanTable(HashMap<Character, String> huffmanTable) {
-        Path huffmanTableFile = Path.of("src/huffman/dec_tab.txt");
-        try(OutputStream out = Files.newOutputStream(huffmanTableFile)) {
+        try(OutputStream out = Files.newOutputStream(HUFFMAN_TABLE_PATH)) {
             OutputStreamWriter writer = new OutputStreamWriter(out);
             BufferedWriter buffered = new BufferedWriter(writer);
             for(Map.Entry<Character,String> e : huffmanTable.entrySet()) {
-                buffered.write(e.getKey() + ":" + e.getValue() + "-");
+                buffered.write((int)e.getKey() + ":" + e.getValue() + "-");
             }
             buffered.close();
         } catch (IOException e) {
