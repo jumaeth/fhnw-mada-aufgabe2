@@ -8,13 +8,15 @@ import java.util.*;
 public class HuffmanKodierung {
 
     // Output File for Byte Array
-    private static final Path OUTPUT_FILE = Path.of("src/huffman/output.dat");
+    private static final Path BYTE_ARRAY_PATH = Path.of("src/huffman/output.dat");
 
     // Path to Huffman Table
     private static final Path HUFFMAN_TABLE_PATH = Path.of("src/huffman/dec_tab.txt");
 
     // File which needs to be encoded
     private static final Path FILE_TO_ENCODE = Path.of("src/Huffman/toEncode.txt");
+
+    private static final Path DECOMPRESS_PATH = Path.of("src/huffman/decompress.txt");
 
     public static void main(String[] args) {
         try (InputStream inEncode = Files.newInputStream(FILE_TO_ENCODE)) {
@@ -82,11 +84,11 @@ public class HuffmanKodierung {
             System.out.println(Arrays.toString(byteArray));
 
             // Write byteArray to File
-            FileOutputStream fos = new FileOutputStream(OUTPUT_FILE.toString());
+            FileOutputStream fos = new FileOutputStream(BYTE_ARRAY_PATH.toString());
             fos.write(byteArray);
             fos.close();
 
-            decodeFile(OUTPUT_FILE.toString());
+            decodeFile(BYTE_ARRAY_PATH.toString());
         } catch (IOException e) {
             System.out.println("Error while reading from file output.dat");
         }
@@ -102,6 +104,20 @@ public class HuffmanKodierung {
         // Decode Binary String
         String decodedMessage = decodeBitstring(binary);
         System.out.println(decodedMessage);
+
+        // Write Decoded Message to File
+        saveResultToFile(decodedMessage);
+    }
+
+    private static void saveResultToFile(String decodedMessage) {
+        try (OutputStream out = Files.newOutputStream(DECOMPRESS_PATH)) {
+            OutputStreamWriter writer = new OutputStreamWriter(out);
+            BufferedWriter buffered = new BufferedWriter(writer);
+            buffered.write(decodedMessage);
+            buffered.close();
+        } catch (IOException e) {
+            System.out.println("Error while writing to file DECOMPRESS_PATH");
+        }
     }
 
     // Cut off last ...1000
