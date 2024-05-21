@@ -7,14 +7,14 @@ import java.util.*;
 
 public class HuffmanKodierung {
 
+    // Output File for Byte Array
+    private static final Path OUTPUT_FILE = Path.of("src/huffman/output.dat");
+
     // Path to Huffman Table
     private static final Path HUFFMAN_TABLE_PATH = Path.of("src/huffman/dec_tab.txt");
 
     // File which needs to be encoded
     private static final Path FILE_TO_ENCODE = Path.of("src/Huffman/toEncode.txt");
-
-    // Output File for Byte Array
-    private static final Path OUTPUT_FILE = Path.of("src/huffman/output.dat");
 
     public static void main(String[] args) {
         try (InputStream inEncode = Files.newInputStream(FILE_TO_ENCODE)) {
@@ -86,31 +86,48 @@ public class HuffmanKodierung {
             fos.write(byteArray);
             fos.close();
 
-            // Read File
-            File file = new File(OUTPUT_FILE.toString());
-            byte[] bFile = new byte[(int) file.length()];
-            FileInputStream fis = new FileInputStream(file);
+            decodeFile(OUTPUT_FILE.toString());
+        } catch (IOException e) {
+            System.out.println("Error while reading from file output.dat");
+        }
+    }
+
+    public static void decodeFile(String path) {
+        // Read File
+        String binary = readEncodedFile(path);
+
+        // remove last ...1000
+        binary = adjustLastBits(binary);
+
+        // Decode Binary String
+        String decodedMessage = decodeBitstring(binary);
+        System.out.println(decodedMessage);
+    }
+
+    // Cut off last ...1000
+    private static String adjustLastBits(String binary) {
+        int index = binary.length() - 1;
+        while(binary.charAt(index) == '1') {
+            index = index - 1;
+        }
+        binary = binary.substring(0,index - 1);
+        System.out.println(binary);
+        return binary;
+    }
+
+    private static String readEncodedFile(String path) {
+        File file = new File(path);
+        byte[] bFile = new byte[(int) file.length()];
+        try (FileInputStream fis = new FileInputStream(file)) {
             fis.read(bFile);
             String binary = byteArrToBitString(bFile);
             System.out.println(binary);
             fis.close();
-
-            // Cut off last ...1000
-            int index = binary.length() - 1;
-            while(binary.charAt(index) == '1') {
-                index = index - 1;
-            }
-            binary = binary.substring(0,index - 1);
-            System.out.println(binary);
-
-            // Decode Binary String
-            String decodedMessage = decodeBitstring(binary);
-            System.out.println(decodedMessage);
-
-
+            return binary;
         } catch (IOException e) {
             System.out.println("Error while reading from file output.dat");
         }
+        return "";
     }
 
     // Decode Bitstring with huffmanTable
