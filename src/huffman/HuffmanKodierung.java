@@ -107,10 +107,10 @@ public class HuffmanKodierung {
     // Cut off last ...1000
     private static String adjustLastBits(String binary) {
         int index = binary.length() - 1;
-        while(binary.charAt(index) == '1') {
+        while(binary.charAt(index) != '1') {
             index = index - 1;
         }
-        binary = binary.substring(0,index - 1);
+        binary = binary.substring(0,index);
         System.out.println(binary);
         return binary;
     }
