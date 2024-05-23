@@ -8,13 +8,13 @@ import java.util.*;
 public class HuffmanKodierung {
 
     // Output File for Byte Array
-    private static final Path BYTE_ARRAY_PATH = Path.of("src/huffman/output.dat");
+    private static final Path BYTE_ARRAY_PATH = Path.of("src/huffman/output-mada.dat");
 
     // Path to Huffman Table
-    private static final Path HUFFMAN_TABLE_PATH = Path.of("src/huffman/dec_tab.txt");
+    private static final Path HUFFMAN_TABLE_PATH = Path.of("src/huffman/dec_tab-mada.txt");  //Change to: dec_tab-mada.txt and run DecodeOnly
 
     // File which needs to be encoded
-    private static final Path FILE_TO_ENCODE = Path.of("src/Huffman/toEncode.txt");
+    private static final Path FILE_TO_ENCODE = Path.of("src/Huffman/toCompress.txt");
 
     private static final Path DECOMPRESS_PATH = Path.of("src/huffman/decompress.txt");
 
@@ -227,6 +227,8 @@ public class HuffmanKodierung {
             // Add Values from Huffman Table to one Bitstring
             String line = buffered.readLine();
             while (line != null) {
+                String s1 = "\n";
+                line = line + s1;
                 for(int i = 0; i < line.length(); i++) {
                     char c = line.charAt(i);
                     bitString = bitString + huffmanTable.get(c);
@@ -276,6 +278,8 @@ public class HuffmanKodierung {
         String line = bufferedReader.readLine();
 
         while (line != null) {
+            String s1 = "\n";
+            line = line + s1;
             for(int i = 0; i < line.length(); i++) {
                 char c = line.charAt(i);
                 if(charCount.containsKey(c)) {
