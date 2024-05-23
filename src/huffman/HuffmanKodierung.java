@@ -8,10 +8,10 @@ import java.util.*;
 public class HuffmanKodierung {
 
     // Output File for Byte Array
-    private static final Path BYTE_ARRAY_PATH = Path.of("src/huffman/output-mada.dat");
+    private static final Path BYTE_ARRAY_PATH = Path.of("src/huffman/output-mada.dat"); //For Our Huffman Kodierung change to: output.dat and run
 
     // Path to Huffman Table
-    private static final Path HUFFMAN_TABLE_PATH = Path.of("src/huffman/dec_tab-mada.txt");  //Change to: dec_tab-mada.txt and run DecodeOnly
+    private static final Path HUFFMAN_TABLE_PATH = Path.of("src/huffman/dec_tab-mada.txt");  //For Our Huffman Kodierung change to: dec_tab.txt and run
 
     // File which needs to be encoded
     private static final Path FILE_TO_ENCODE = Path.of("src/Huffman/toCompress.txt");
