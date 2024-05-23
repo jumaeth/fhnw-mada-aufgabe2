@@ -53,7 +53,6 @@ public class ElGamalVerfahren {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-
         // Schreiben des secret Keys in die sk.txt Datei
         Path sk = Path.of("src/elgamal/sk.txt");
         try (OutputStream out = Files.newOutputStream(sk)) {

@@ -64,7 +64,6 @@ public class Decrypt {
             }
             writer.close();
         }
-
     }
 
     public static void main(String[] args) {
