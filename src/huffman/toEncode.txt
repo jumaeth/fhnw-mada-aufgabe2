@@ -1,1 +1,0 @@
-Dieser Text soll mit Huffman Methode komprimiert werden
